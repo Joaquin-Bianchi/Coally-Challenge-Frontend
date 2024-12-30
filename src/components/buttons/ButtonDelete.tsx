@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 interface Props {
   id: string;
-  deleteFn: (id: string) => Promise<Response>;
+  deleteFn: (id: string) => any;
   nameMutationKey: string;
   nameQueryKey: string;
   textObjectDelete: string;

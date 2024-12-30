@@ -63,7 +63,7 @@ export const deleteTodoById = async (todoId: string) => {
     throw new Error(`Error: ${response.statusText}`);
   }
 
-  return true;
+  return;
 };
 
 export const getTodoById = async (todoId: string) => {
