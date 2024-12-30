@@ -1,3 +1,4 @@
+![image](https://github.com/user-attachments/assets/643411dc-7134-461b-b7d9-917c47087bd4)
 # Coally Challenge "Frontend"
 ### Este es el repositorio del frontend. Ver [repo](https://github.com/Joaquin-Bianchi/Coally-Challenge-Backend) Backend
 
