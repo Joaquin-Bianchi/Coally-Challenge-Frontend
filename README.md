@@ -1,4 +1,6 @@
-# Coally Challenge *Frontend*
+# Coally Challenge "Frontend"
+### Este es el repositorio del frontend. Ver [repo](https://github.com/Joaquin-Bianchi/Coally-Challenge-Backend) Backend
+
 Demo: https://coally-challenge-frontend.vercel.app/
 ![image](https://github.com/user-attachments/assets/b91d78ee-5cc5-4d53-ae6d-c66271d19f7d)
 
