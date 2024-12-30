@@ -1,112 +1,71 @@
 import { Todo } from "@/interfaces/todo.interface";
+import { getToken } from "@/services/authService";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost/a:3000/api";
 
-export const getTodos = async () => {
-  try {
-    const response = await fetch(`${API_URL}/tasks`);
-
-    if (!response.ok) {
-      throw new Error("Error fetching tasks");
-    }
-
-    const tasks = await response.json();
-    return tasks;
-  } catch (error) {
-    console.error("Error fetching tasks:", error);
-    throw error;
-  }
+const getAuthHeaders = () => {
+  const token = getToken();
+  return { Authorization: token ? `Bearer ${token}` : "" };
 };
 
-export const createTodo = async (todo: Todo) => {
-  try {
-    const response = await fetch(`${API_URL}/tasks`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(todo),
-    });
+const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+  const headers = {
+    "Content-Type": "application/json",
+    ...getAuthHeaders(),
+    ...options.headers,
+  };
 
-    if (!response.ok) {
-      throw new Error("Error creating task");
-    }
-
-    const newTask = await response.json();
-    return newTask;
-  } catch (error) {
-    console.error("Error creating task:", error);
-    throw error;
-  }
-};
-
-export const editTodo = async (todo: Todo) => {
-  try {
-    const response = await fetch(`${API_URL}/tasks/${todo.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(todo),
-    });
-
-    if (!response.ok) {
-      throw new Error("Error editing task");
-    }
-
-    const updatedTask = await response.json();
-    return updatedTask;
-  } catch (error) {
-    console.error("Error editing task:", error);
-    throw error;
-  }
-};
-
-export const updateTodoStatus = async (id: string, completed: boolean) => {
-  const response = await fetch(`${API_URL}/tasks/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ completed }),
-  });
+  const response = await fetch(url, { ...options, headers });
 
   if (!response.ok) {
-    throw new Error("Failed to update todo status");
+    throw new Error(`Error: ${response.statusText}`);
   }
 
   return response.json();
 };
 
+export const getTodos = async () => {
+  return fetchWithAuth(`${API_URL}/tasks`);
+};
+
+export const createTodo = async (todo: Todo) => {
+  return fetchWithAuth(`${API_URL}/tasks`, {
+    method: "POST",
+    body: JSON.stringify(todo),
+  });
+};
+
+export const editTodo = async (todo: Todo) => {
+  return fetchWithAuth(`${API_URL}/tasks/${todo.id}`, {
+    method: "PUT",
+    body: JSON.stringify(todo),
+  });
+};
+
+export const updateTodoStatus = async (id: string, completed: boolean) => {
+  return fetchWithAuth(`${API_URL}/tasks/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({ completed }),
+  });
+};
+
 export const deleteTodoById = async (todoId: string) => {
-  try {
-    const response = await fetch(`${API_URL}/tasks/${todoId}`, {
-      method: "DELETE",
-    });
+  const headers = {
+    ...getAuthHeaders(),
+  };
 
-    if (!response.ok) {
-      throw new Error("Error deleting task");
-    }
+  const response = await fetch(`${API_URL}/tasks/${todoId}`, {
+    method: "DELETE",
+    headers,
+  });
 
-    return response;
-  } catch (error) {
-    console.error("Error deleting task:", error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(`Error: ${response.statusText}`);
   }
+
+  return true;
 };
 
 export const getTodoById = async (todoId: string) => {
-  try {
-    const response = await fetch(`${API_URL}/tasks/${todoId}`);
-
-    if (!response.ok) {
-      throw new Error("Task not found");
-    }
-
-    const task = await response.json();
-    return task;
-  } catch (error) {
-    console.error("Error fetching task:", error);
-    throw error;
-  }
+  return fetchWithAuth(`${API_URL}/tasks/${todoId}`);
 };

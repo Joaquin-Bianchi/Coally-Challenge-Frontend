@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import TodosPage from "./pages/todos/TodosPage";
+import LoginPage from "./pages/auth/LoginPage";
+import ProtectedRoute from "./components/guard/ProtectedRoute";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -10,8 +12,18 @@ const App = () => {
       <BrowserRouter>
         <Toaster richColors />
         <Routes>
-          {/* Ruta pública */}
-          <Route path="/" element={<TodosPage />} />{" "}
+          {/* Rutas públicas */}
+          <Route path="/login" element={<LoginPage />} />
+
+          {/* Rutas privadas */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <TodosPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
